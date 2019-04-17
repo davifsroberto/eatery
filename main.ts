@@ -5,10 +5,11 @@ const server = restify.createServer({
   version: '1.0.0'
 })
 
-server.get('/hello', function (req, resp, next) {
+server.get('/hello', (req, resp, next) => {
   resp.json({ message: 'hello!' })
   return next()
 })
-server.listen(3000, function () {
+
+server.listen(3000, () => {
   console.log("API runing in http://localhost:3000")
 })
