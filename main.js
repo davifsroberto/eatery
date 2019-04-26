@@ -1,14 +1,11 @@
 "use strict";
 exports.__esModule = true;
-var restify = require("restify");
-var server = restify.createServer({
-    name: 'meat-api',
-    version: '1.0.0'
-});
-server.get('/hello', function (req, resp, next) {
-    resp.json({ message: 'hello!' });
-    return next();
-});
-server.listen(3000, function () {
-    console.log("API runing in http://localhost:3000");
+var server_1 = require("./server/server");
+var server = new server_1.Server();
+server.bootstrap().then(function (server) {
+    console.log('Server is listening on:', server.aplication.address());
+})["catch"](function (error) {
+    console.log('Server failed to start');
+    console.error(error);
+    process.exit(1);
 });

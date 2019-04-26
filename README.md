@@ -1,2 +1,2 @@
 # eatery
-Projeto voltado para estudo de Node.js e Restify.
+Projeto voltado para estudo de Node.js com Restify.
