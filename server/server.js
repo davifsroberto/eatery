@@ -5,7 +5,7 @@ var environment_1 = require("../common/environment");
 var Server = /** @class */ (function () {
     function Server() {
     }
-    Server.prototype.initRoutes = function () {
+    Server.prototype.initRoutes = function (routers) {
         var _this = this;
         return new Promise(function (resolve, reject) {
             try {
@@ -15,12 +15,10 @@ var Server = /** @class */ (function () {
                 });
                 _this.aplication.use(restify.plugins.queryParser());
                 // Routes
-                _this.aplication.get('/info', function (req, resp, next) {
-                    resp.json({
-                        browser: req.userAgent()
-                    });
-                    return next();
-                });
+                for (var _i = 0, routers_1 = routers; _i < routers_1.length; _i++) {
+                    var router = routers_1[_i];
+                    router.applyRoutes(_this.aplication);
+                }
                 _this.aplication.listen(environment_1.environment.server.port, function () {
                     resolve(_this.aplication);
                 });
@@ -30,9 +28,10 @@ var Server = /** @class */ (function () {
             }
         });
     };
-    Server.prototype.bootstrap = function () {
+    Server.prototype.bootstrap = function (routers) {
         var _this = this;
-        return this.initRoutes().then(function () { return _this; });
+        if (routers === void 0) { routers = []; }
+        return this.initRoutes(routers).then(function () { return _this; });
     };
     return Server;
 }());

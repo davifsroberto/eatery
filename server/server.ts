@@ -1,12 +1,13 @@
 import * as restify from 'restify'
 import { environment } from '../common/environment'
+import { Router } from '../common/Router'
 
 
 export class Server {
 
   aplication: restify.Server
 
-  initRoutes(): Promise<any> {
+  initRoutes(routers: Router[] ): Promise<any> {
     return new Promise((resolve, reject) => {
       try { 
 
@@ -18,12 +19,9 @@ export class Server {
         this.aplication.use(restify.plugins.queryParser())
 
         // Routes
-        this.aplication.get('/info', (req, resp, next) => {
-          resp.json({ 
-            browser: req.userAgent() 
-          })
-          return next()
-        })
+        for (let router of routers) {
+          router.applyRoutes(this.aplication)          
+        }
 
         this.aplication.listen(environment.server.port, () => {
           resolve(this.aplication)
@@ -35,8 +33,8 @@ export class Server {
     })
   }
 
-  bootstrap(): Promise<Server> {
-    return this.initRoutes().then(() => this)
+  bootstrap(routers: Router[] = []): Promise<Server> {
+    return this.initRoutes(routers).then(() => this)
   }
 
 }
